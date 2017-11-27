@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+camunda:
+  bpm:
+    migration:
+      case-instance-migration-on-startup: true
+    admin-user:
+      id: demo
