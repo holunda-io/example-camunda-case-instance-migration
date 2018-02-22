@@ -34,7 +34,7 @@ public class CaseInstanceMigrator {
 
     private final TaskMigrator taskMigrator;
 
-    private final List<CaseExecutionMigrationStep> migrationSteps;
+    private final List<CaseExecutionMigrationStep> caseExecutionMigrationSteps;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CaseInstanceMigrator.class);
 
@@ -42,12 +42,12 @@ public class CaseInstanceMigrator {
                                 ProcessEngine processEngine,
                                 CaseService caseService,
                                 TaskMigrator taskMigrator,
-                                List<CaseExecutionMigrationStep> migrationSteps) {
+                                List<CaseExecutionMigrationStep> caseExecutionMigrationSteps) {
         this.camundaCaseExecutionRepository = camundaCaseExecutionRepository;
         this.processEngine = processEngine;
         this.caseService = caseService;
         this.taskMigrator = taskMigrator;
-        this.migrationSteps = migrationSteps;
+        this.caseExecutionMigrationSteps = caseExecutionMigrationSteps;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -55,17 +55,20 @@ public class CaseInstanceMigrator {
         Assert.notNull(caseInstanceId, "caseInstanceId it missing");
         Assert.notNull(targetCaseDefId, "targetCaseDefId is missing");
 
-        if (LOGGER.isInfoEnabled())
+        if (LOGGER.isInfoEnabled()) {
             LOGGER.info(String.format("Migrating case instance '%s'", caseInstanceId));
+        }
 
         final List<CamundaCaseExecution> executionsToMigrate = ImmutableList.copyOf(camundaCaseExecutionRepository.findByCaseInstanceId(caseInstanceId));
 
-        if (LOGGER.isInfoEnabled())
+        if (LOGGER.isInfoEnabled()) {
             LOGGER.info(String.format("Found %d executions for case instance '%s'", executionsToMigrate.size(), caseInstanceId));
+        }
 
         executionsToMigrate.forEach(execution -> migrateOneExecution(execution, targetCaseDefId));
 
         produceCaseInstanceHistoryEventsForOneCaseInstance(caseInstanceId);
+
 
         taskMigrator.migrateAllTasksForCaseInstance(caseInstanceId, targetCaseDefId);
     }
@@ -81,7 +84,7 @@ public class CaseInstanceMigrator {
 
         final AtomicReference<CamundaCaseExecution> executionRef = new AtomicReference<>(execution);
 
-        migrationSteps.forEach(step -> executionRef.set(step.migrate(executionRef.get())));
+        caseExecutionMigrationSteps.forEach(step -> executionRef.set(step.migrate(executionRef.get())));
 
         camundaCaseExecutionRepository.save(executionRef.get());
     }

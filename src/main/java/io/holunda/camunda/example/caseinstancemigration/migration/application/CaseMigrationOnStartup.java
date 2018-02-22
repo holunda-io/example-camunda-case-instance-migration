@@ -1,6 +1,7 @@
 package io.holunda.camunda.example.caseinstancemigration.migration.application;
 
 
+import io.holunda.camunda.example.caseinstancemigration.migration.command.AddNewActivitiesCmd;
 import io.holunda.camunda.example.caseinstancemigration.migration.command.MigrateCaseInstanceVersionCmd;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
@@ -35,6 +36,7 @@ public class CaseMigrationOnStartup {
     public void migrateOnStartup(PostDeployEvent event) {
         if (migrateOnStartup) {
             ((ProcessEngineConfigurationImpl) processEngine.getProcessEngineConfiguration()).getCommandExecutorTxRequired().execute(new MigrateCaseInstanceVersionCmd("myCaseDefinitionKey", ctx));
+            ((ProcessEngineConfigurationImpl) processEngine.getProcessEngineConfiguration()).getCommandExecutorTxRequired().execute(new AddNewActivitiesCmd("myCaseDefinitionKey", ctx));
         } else if (LOGGER.isInfoEnabled()) {
             LOGGER.info("CaseInstance migration on application startup is disabled");
         }
