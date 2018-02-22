@@ -1,9 +1,9 @@
 package io.holunda.camunda.example.caseinstancemigration.migration.migrator;
 
+import com.google.common.collect.ImmutableList;
 import io.holunda.camunda.example.caseinstancemigration.migration.domain.CamundaCaseExecution;
 import io.holunda.camunda.example.caseinstancemigration.migration.domain.CamundaCaseExecutionRepository;
 import io.holunda.camunda.example.caseinstancemigration.migration.migrator.steps.CaseExecutionMigrationStep;
-import jersey.repackaged.com.google.common.collect.ImmutableList;
 import org.camunda.bpm.engine.CaseService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;

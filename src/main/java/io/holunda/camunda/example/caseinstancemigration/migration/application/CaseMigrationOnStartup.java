@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CaseMigrationOnStartup {
 
-    @Value("${camunda.bpm.migration.case-instance-migration-on-startup:false}")
     private Boolean migrateOnStartup;
 
     private final ProcessEngine processEngine;
